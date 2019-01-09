@@ -50,6 +50,14 @@ public class SessaoForm {
 		this.filmeId = filmeId;
 	}
 	
+	public Integer getSalaId() {
+		return salaId;
+	}
+
+	public void setSalaId(Integer salaId) {
+		this.salaId = salaId;
+	}
+
 	public Sessao toSessao(SalaDao salaDao, FilmeDao filmeDao) {
 		Filme filme = filmeDao.findOne(this.filmeId);
 		Sala sala = salaDao.findOne(this.salaId);
