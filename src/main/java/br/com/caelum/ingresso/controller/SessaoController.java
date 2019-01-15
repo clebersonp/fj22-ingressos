@@ -1,6 +1,7 @@
 package br.com.caelum.ingresso.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -18,9 +19,11 @@ import br.com.caelum.ingresso.dao.FilmeDao;
 import br.com.caelum.ingresso.dao.LugarDao;
 import br.com.caelum.ingresso.dao.SalaDao;
 import br.com.caelum.ingresso.dao.SessaoDao;
+import br.com.caelum.ingresso.model.ImagemCapa;
 import br.com.caelum.ingresso.model.Lugar;
 import br.com.caelum.ingresso.model.Sessao;
 import br.com.caelum.ingresso.model.form.SessaoForm;
+import br.com.caelum.ingresso.rest.OmdbClient;
 import br.com.caelum.ingresso.validacao.GerenciadorDeSessao;
 
 @Controller
@@ -33,7 +36,7 @@ public class SessaoController {
 	private FilmeDao filmeDao;
 	
 	@Autowired
-	private LugarDao lugarDao;
+	OmdbClient omdbClient;
 	
 	@Autowired
 	private SessaoDao sessaoDao;
@@ -73,10 +76,15 @@ public class SessaoController {
 	}
 	
 	@GetMapping("/sessao/{id}/lugares")
-	public ModelAndView lugares(@PathVariable("id") Integer id) {
+	public ModelAndView lugaresNaSessao(@PathVariable("id") Integer sessaoId) {
 		ModelAndView modelAndView = new ModelAndView("/sessao/lugares");
-		Sessao sessao = sessaoDao.findOne(id);
+		
+		Sessao sessao = sessaoDao.findOne(sessaoId);
+		Optional<ImagemCapa> optionalImagemCapa = omdbClient.request(sessao.getFilme(), ImagemCapa.class);
+		
 		modelAndView.addObject("sessao", sessao);
+		modelAndView.addObject("imagemCapa", optionalImagemCapa.orElse(new ImagemCapa()));
+		
 		return modelAndView;
 	}
 	

@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.caelum.ingresso.model.DetalhesDoFilme;
 import br.com.caelum.ingresso.model.Filme;
 
 @Component
 public class OmdbClient {
 
-	public Optional<DetalhesDoFilme> request(Filme filme) {
+	// o <T> antes do retorno é para dizer que somente esse metodo sera generico e nao toda a classe
+	public <T> Optional<T> request(Filme filme, Class<T> tClass) {
 		RestTemplate client = new RestTemplate();
 		
 		String titulo = filme.getNome().replace(" ", "+");
@@ -20,8 +20,8 @@ public class OmdbClient {
 		String url = String.format("https://omdb-fj22.herokuapp.com/movie?title=%s", titulo);
 		
 		try {
-			DetalhesDoFilme detalhesDoFilme = client.getForObject(url, DetalhesDoFilme.class);
-			return Optional.ofNullable(detalhesDoFilme);
+			T response = client.getForObject(url, tClass);
+			return Optional.ofNullable(response);
 		} catch (RestClientException e) {
 			return Optional.empty();
 		}
