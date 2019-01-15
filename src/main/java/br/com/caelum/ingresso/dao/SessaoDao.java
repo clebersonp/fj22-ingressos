@@ -32,4 +32,10 @@ public class SessaoDao {
 				.setParameter("filme", filme)
 				.getResultList();
 	}
+
+	public Sessao findOne(Integer id) {
+		return this.entityManager.createQuery("select s from Sessao s where s.id = :id", Sessao.class)
+				.setParameter("id", id)
+				.getSingleResult();
+	}
 }

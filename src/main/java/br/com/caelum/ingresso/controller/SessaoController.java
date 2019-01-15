@@ -9,13 +9,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.caelum.ingresso.dao.FilmeDao;
+import br.com.caelum.ingresso.dao.LugarDao;
 import br.com.caelum.ingresso.dao.SalaDao;
 import br.com.caelum.ingresso.dao.SessaoDao;
+import br.com.caelum.ingresso.model.Lugar;
 import br.com.caelum.ingresso.model.Sessao;
 import br.com.caelum.ingresso.model.form.SessaoForm;
 import br.com.caelum.ingresso.validacao.GerenciadorDeSessao;
@@ -28,6 +31,9 @@ public class SessaoController {
 	
 	@Autowired
 	private FilmeDao filmeDao;
+	
+	@Autowired
+	private LugarDao lugarDao;
 	
 	@Autowired
 	private SessaoDao sessaoDao;
@@ -64,6 +70,14 @@ public class SessaoController {
 		}
 		
 		return form(form.getSalaId(), form);
+	}
+	
+	@GetMapping("/sessao/{id}/lugares")
+	public ModelAndView lugares(@PathVariable("id") Integer id) {
+		ModelAndView modelAndView = new ModelAndView("/sessao/lugares");
+		Sessao sessao = sessaoDao.findOne(id);
+		modelAndView.addObject("sessao", sessao);
+		return modelAndView;
 	}
 	
 }
