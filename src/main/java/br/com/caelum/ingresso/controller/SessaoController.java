@@ -19,6 +19,7 @@ import br.com.caelum.ingresso.dao.FilmeDao;
 import br.com.caelum.ingresso.dao.LugarDao;
 import br.com.caelum.ingresso.dao.SalaDao;
 import br.com.caelum.ingresso.dao.SessaoDao;
+import br.com.caelum.ingresso.model.Carrinho;
 import br.com.caelum.ingresso.model.ImagemCapa;
 import br.com.caelum.ingresso.model.Lugar;
 import br.com.caelum.ingresso.model.Sessao;
@@ -41,6 +42,9 @@ public class SessaoController {
 	
 	@Autowired
 	private SessaoDao sessaoDao;
+	
+	@Autowired
+	private Carrinho carrinho;
 	
 	@GetMapping("/admin/sessao")
 	public ModelAndView form(@RequestParam("salaId") Integer salaId, SessaoForm form) {
@@ -86,7 +90,7 @@ public class SessaoController {
 		modelAndView.addObject("sessao", sessao);
 		modelAndView.addObject("imagemCapa", optionalImagemCapa.orElse(new ImagemCapa()));
 		modelAndView.addObject("tiposDeIngressos", TipoDeIngresso.values());
-		
+		modelAndView.addObject("carrinho", carrinho);
 		return modelAndView;
 	}
 	
